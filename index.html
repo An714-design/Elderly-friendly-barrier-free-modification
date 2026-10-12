@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>功能演示视频 · 适老化无障碍界面改造工具</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{
+    --bg:#0f172a; --card:#1e293b; --line:#334155;
+    --text:#f1f5f9; --muted:#94a3b8; --primary:#3b82f6; --accent:#f59e0b;
+  }
+  body{
+    font-family:"Microsoft YaHei","PingFang SC",-apple-system,sans-serif;
+    background:linear-gradient(160deg,#0f172a 0%,#1e293b 55%,#0f172a 100%);
+    color:var(--text); min-height:100vh; padding:40px 20px;
+  }
+  .wrap{ max-width:980px; margin:0 auto; }
+
+  .head{ text-align:center; margin-bottom:32px; }
+  .head .icon{ font-size:48px; margin-bottom:12px; }
+  .head h1{ font-size:26px; font-weight:800; letter-spacing:1px; margin-bottom:10px; }
+  .head .sub{ font-size:14px; color:var(--muted); line-height:1.9; }
+  .badges{ margin-top:16px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+  .badge{
+    font-size:12px; padding:5px 12px; border-radius:20px;
+    background:rgba(59,130,246,.15); border:1px solid rgba(59,130,246,.4); color:#93c5fd;
+  }
+
+  .player{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:16px; margin-bottom:22px; box-shadow:0 20px 50px rgba(0,0,0,.4);
+  }
+  video{ width:100%; border-radius:8px; display:block; background:#000; }
+
+  .meta{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:22px;
+  }
+  .meta .cell{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:14px; text-align:center;
+  }
+  .meta .cell .k{ font-size:11px; color:var(--muted); margin-bottom:6px; }
+  .meta .cell .v{ font-size:15px; font-weight:700; }
+
+  .steps{
+    background:var(--card); border:1px solid var(--line); border-radius:12px; padding:24px 28px;
+  }
+  .steps h2{ font-size:16px; margin-bottom:16px; color:#e2e8f0; }
+  .steps ol{ margin-left:20px; font-size:13.5px; color:#cbd5e1; line-height:2.2; }
+  .steps code{
+    background:#0f172a; padding:2px 7px; border-radius:4px;
+    font-family:Consolas,monospace; font-size:12px; color:#7dd3fc;
+  }
+
+  .actions{ margin-top:22px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .btn{
+    display:inline-block; padding:11px 22px; border-radius:8px; text-decoration:none;
+    font-size:13.5px; font-weight:600; transition:.2s;
+  }
+  .btn.primary{ background:var(--primary); color:#fff; }
+  .btn.primary:hover{ background:#2563eb; }
+  .btn.ghost{ background:transparent; color:#cbd5e1; border:1px solid var(--line); }
+  .btn.ghost:hover{ border-color:#64748b; color:#fff; }
+
+  .foot{ text-align:center; margin-top:32px; font-size:12px; color:#64748b; line-height:2; }
+
+  @media (max-width:640px){
+    .meta{ grid-template-columns:repeat(2,1fr); }
+    .head h1{ font-size:20px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <div class="icon">♿</div>
+    <h1>适老化无障碍界面改造工具</h1>
+    <div class="sub">
+      上传截图 · 画框标注 · 双引擎检测 · 一键导出验收报告<br>
+      华为云码道 (CodeArts) 代码智能体辅助开发 · An 队
+    </div>
+    <div class="badges">
+      <span class="badge">WCAG 2.1 AA</span>
+      <span class="badge">WCAG 2.2</span>
+      <span class="badge">纯前端零依赖</span>
+      <span class="badge">v1.0 MVP</span>
+    </div>
+  </div>
+
+  <div class="player">
+    <video controls playsinline preload="metadata" poster="">
+      <source src="video/demo.mp4" type="video/mp4">
+      你的浏览器不支持 HTML5 视频播放，请
+      <a href="video/demo.mp4" style="color:#93c5fd">点此下载视频</a>。
+    </video>
+  </div>
+
+  <div class="meta">
+    <div class="cell"><div class="k">时长</div><div class="v">01:36</div></div>
+    <div class="cell"><div class="k">分辨率</div><div class="v">900 × 536</div></div>
+    <div class="cell"><div class="k">文件大小</div><div class="v">1.4 MB</div></div>
+    <div class="cell"><div class="k">编码</div><div class="v">H.264 / AAC</div></div>
+  </div>
+
+  <div class="steps">
+    <h2>演示内容导览</h2>
+    <ol>
+      <li>本地启动服务，打开主应用 <code>index.html</code></li>
+      <li>选择检测模式（模式 A 纯截图 / 模式 B 截图 + DOM）与标准档位</li>
+      <li>上传校园系统界面截图，勾选隐私确认</li>
+      <li>手动画框标注区域并选择类型（文字 / 控件 / 图标 / 背景）</li>
+      <li>执行检测：V 层规则引擎 → AI 语义分析 → 合并去重 → 分级</li>
+      <li>查看标注图与问题清单（编号 / 类别 / 分级 / 影响人群 / 标准条款）</li>
+      <li>展开单条改造详情：色块对比、尺寸示意、背景像素替换</li>
+      <li>导出验收报告（PNG / PDF 图片式 / 打印式）</li>
+    </ol>
+  </div>
+
+  <div class="actions">
+    <a class="btn primary" href="video/demo.mp4" download>下载演示视频</a>
+    <a class="btn ghost" href="README.md">查看项目说明</a>
+  </div>
+
+  <div class="foot">
+    本页面用于展示功能演示视频 · 视频内容为产品真实操作录屏<br>
+    无障碍说明：本页面提供 4.5:1 以上文本对比度、可见焦点样式、键盘可达的播放控件控制
+  </div>
+
+</div>
+</body>
+</html>
