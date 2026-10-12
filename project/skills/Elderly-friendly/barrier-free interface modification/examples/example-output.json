@@ -1,0 +1,123 @@
+{
+  "meta": {
+    "mode": "A",
+    "level": "AA",
+    "dpr": 2,
+    "date": "2026-10-12",
+    "systemName": "2026春季学期网上选课",
+    "standard": "WCAG 2.1 AA"
+  },
+  "regions": [
+    { "id": "R01", "x": 32, "y": 140, "w": 120, "h": 28, "type": "text" },
+    { "id": "R02", "x": 120, "y": 108, "w": 80, "h": 28, "type": "text" },
+    { "id": "R03", "x": 120, "y": 108, "w": 80, "h": 28, "type": "control" },
+    { "id": "R04", "x": 32, "y": 80, "w": 200, "h": 20, "type": "text" }
+  ],
+  "issues": [
+    {
+      "issueId": "I01",
+      "regionId": "R01",
+      "region": { "x": 32, "y": 140, "w": 120, "h": 28 },
+      "ruleId": "V1",
+      "category": "对比度-正文",
+      "level": "hard",
+      "severity": "高",
+      "description": "正文对比度 1.32:1，低于 AA 要求 4.5:1",
+      "suggestion": "文字颜色由 #bbbbbb 改为 #333333",
+      "standard": "WCAG 2.1 SC 1.4.3 (AA: 4.5:1)",
+      "affectedGroups": ["低视力", "老年用户"],
+      "fixTypes": ["color"],
+      "source": "rule-engine",
+      "evidence": {
+        "target": "text",
+        "actualValue": 1.32,
+        "threshold": 4.5,
+        "fgColor": "#bbbbbb",
+        "bgColor": "#f5f7fa",
+        "dpr": 2,
+        "estNote": ""
+      }
+    },
+    {
+      "issueId": "I02",
+      "regionId": "R02",
+      "region": { "x": 120, "y": 108, "w": 80, "h": 28 },
+      "ruleId": "V1",
+      "category": "对比度-正文",
+      "level": "hard",
+      "severity": "高",
+      "description": "未激活Tab文字对比度 2.85:1，低于 AA 要求 4.5:1",
+      "suggestion": "文字颜色由 #999999 改为 #333333",
+      "standard": "WCAG 2.1 SC 1.4.3 (AA: 4.5:1)",
+      "affectedGroups": ["低视力", "老年用户"],
+      "fixTypes": ["color"],
+      "source": "rule-engine",
+      "evidence": {
+        "target": "text",
+        "actualValue": 2.85,
+        "threshold": 4.5,
+        "fgColor": "#999999",
+        "bgColor": "#ffffff",
+        "dpr": 2,
+        "estNote": ""
+      }
+    },
+    {
+      "issueId": "I03",
+      "regionId": "R03",
+      "region": { "x": 120, "y": 108, "w": 80, "h": 28 },
+      "ruleId": "V5-AA",
+      "category": "触摸目标尺寸(AA)",
+      "level": "hard",
+      "severity": "中",
+      "description": "触摸目标尺寸 20×20 CSS px，低于 AA 要求 24×24",
+      "suggestion": "增大触摸区域至至少 24×24 CSS px",
+      "standard": "WCAG 2.2 SC 2.5.8 (AA)",
+      "affectedGroups": ["运动障碍", "老年用户"],
+      "fixTypes": ["size"],
+      "source": "rule-engine",
+      "evidence": {
+        "target": "background",
+        "actualValue": "20×20",
+        "threshold": "24×24",
+        "fgColor": "",
+        "bgColor": "",
+        "dpr": 2,
+        "estNote": ""
+      }
+    },
+    {
+      "issueId": "I04",
+      "regionId": "R04",
+      "region": { "x": 32, "y": 80, "w": 200, "h": 20 },
+      "ruleId": "V1",
+      "category": "对比度-正文",
+      "level": "soft",
+      "severity": "中",
+      "description": "副标题对比度 5.37:1，AA通过但建议提升至7:1",
+      "suggestion": "文字颜色由 #666666 改为 #333333",
+      "standard": "WCAG 2.1 SC 1.4.3 (AAA: 7:1)",
+      "affectedGroups": ["低视力", "老年用户"],
+      "fixTypes": ["color"],
+      "source": "ai",
+      "evidence": {
+        "target": "text",
+        "actualValue": 5.37,
+        "threshold": 7,
+        "fgColor": "#666666",
+        "bgColor": "#f6f8fa",
+        "dpr": 2,
+        "estNote": ""
+      }
+    }
+  ],
+  "summary": {
+    "totalIssues": 4,
+    "hardCount": 3,
+    "softCount": 1,
+    "affectedGroups": ["低视力", "老年用户", "运动障碍"],
+    "rulesCovered": ["V1", "V5-AA"],
+    "allPass": false,
+    "disclaimer": "本报告为辅助自检，非第三方合规验收"
+  }
+}
