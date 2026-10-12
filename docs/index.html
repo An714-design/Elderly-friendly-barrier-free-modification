@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>参赛材料库 · 适老化无障碍界面改造工具</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{
+    --bg:#f8fafc; --card:#ffffff; --line:#e2e8f0;
+    --text:#0f172a; --muted:#64748b; --primary:#2563eb; --tag:#eff6ff;
+  }
+  body{
+    font-family:"Microsoft YaHei","PingFang SC",-apple-system,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.7; padding:40px 20px;
+  }
+  .wrap{ max-width:1040px; margin:0 auto; }
+
+  .hero{
+    background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 55%,#3b82f6 100%);
+    color:#fff; border-radius:16px; padding:36px 40px; margin-bottom:26px;
+    box-shadow:0 12px 32px rgba(37,99,235,.22);
+  }
+  .hero h1{ font-size:26px; font-weight:800; letter-spacing:1px; margin-bottom:10px; }
+  .hero .sub{ font-size:14px; opacity:.92; line-height:1.9; }
+  .hero .cta{
+    display:inline-block; margin-top:18px; padding:11px 22px; border-radius:8px;
+    background:#fff; color:#1e40af; font-size:14px; font-weight:700; text-decoration:none;
+  }
+  .hero .cta:hover{ background:#f1f5f9; }
+  .hero .cta.secondary{
+    background:rgba(255,255,255,.15); color:#fff; margin-left:10px;
+    border:1px solid rgba(255,255,255,.5);
+  }
+  .hero .cta.secondary:hover{ background:rgba(255,255,255,.25); }
+
+  .sec{ margin-bottom:28px; }
+  .sec-head{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:14px; padding-bottom:10px; border-bottom:2px solid var(--line);
+  }
+  .sec-head .num{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:30px; height:30px; border-radius:50%; flex-shrink:0;
+    background:var(--primary); color:#fff; font-size:14px; font-weight:700;
+  }
+  .sec-head h2{ font-size:18px; font-weight:700; }
+  .sec-head .hint{ font-size:12.5px; color:var(--muted); margin-left:auto; }
+
+  .grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .item{
+    display:flex; align-items:center; gap:12px; padding:15px 18px;
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    text-decoration:none; color:inherit; transition:.18s;
+  }
+  .item:hover{ border-color:#93c5fd; box-shadow:0 4px 14px rgba(37,99,235,.10); transform:translateY(-1px); }
+  .item.wide{ grid-column:1 / -1; }
+  .item .ico{ font-size:20px; flex-shrink:0; }
+  .item .body{ min-width:0; }
+  .item .name{ font-size:14px; font-weight:600; margin-bottom:2px; }
+  .item .desc{ font-size:12.5px; color:var(--muted); }
+  .item .arrow{ margin-left:auto; color:#cbd5e1; font-size:16px; flex-shrink:0; }
+
+  .note{
+    background:#fffbeb; border-left:4px solid #f59e0b; border-radius:8px;
+    padding:16px 20px; font-size:13px; color:#92400e; line-height:2;
+  }
+  .note b{ color:#78350f; }
+  .note.ok{ background:#f0fdf4; border-left-color:#16a34a; color:#166534; }
+  .note.ok b{ color:#14532d; }
+
+  .foot{ text-align:center; margin-top:32px; font-size:12.5px; color:var(--muted); line-height:2; }
+
+  @media (max-width:720px){
+    .grid{ grid-template-columns:1fr; }
+    .hero{ padding:26px 24px; }
+    .hero h1{ font-size:20px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>适老化无障碍界面改造工具</h1>
+    <div class="sub">
+      上传截图 · 画框标注 · 双引擎检测 · 一键导出验收报告<br>
+      华为云码道 (CodeArts) 代码智能体辅助开发 · An 队 · v1.0
+    </div>
+    <a class="cta" href="../index.html">观看功能演示视频</a>
+    <a class="cta secondary" href="https://github.com/An714-design/Elderly-friendly-barrier-free-modification">查看 GitHub 仓库</a>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head">
+      <span class="num">1</span>
+      <h2>码道使用证明</h2>
+      <span class="hint">对应「码道深度使用 · 25 分」</span>
+    </div>
+    <div class="grid">
+      <a class="item" href="https://github.com/An714-design/Elderly-friendly-barrier-free-modification/blob/main/codearts_proof/README.md">
+        <span class="ico">📖</span>
+        <span class="body"><span class="name">证明文档说明</span><span class="desc">本目录的组织方式与阅读指引</span></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="item" href="https://github.com/An714-design/Elderly-friendly-barrier-free-modification/blob/main/codearts_proof/%E4%BA%A4%E4%BA%92%E5%AF%B9%E8%AF%9D%E8%AE%B0%E5%BD%95.md">
+        <span class="ico">💬</span>
+        <span class="body"><span class="name">交互对话记录</span><span class="desc">完整对话过程留痕</span></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="item" href="https://github.com/An714-design/Elderly-friendly-barrier-free-modification/blob/main/codearts_proof/%E5%85%B3%E9%94%AEPrompt.md">
+        <span class="ico">⌨️</span>
+        <span class="body"><span class="name">关键 Prompt</span><span class="desc">提示词设计与迭代</span></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="item" href="https://github.com/An714-design/Elderly-friendly-barrier-free-modification/blob/main/codearts_proof/%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E8%BF%87%E7%A8%8B.md">
+        <span class="ico">🏗️</span>
+        <span class="body"><span class="name">代码生成过程</span><span class="desc">从需求到可运行代码</span></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="item" href="https://github.com/An714-design/Elderly-friendly-barrier-free-modification/blob/main/codearts_proof/%E6%80%9D%E8%80%83%E8%BF%87%E7%A8%8B%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE.md">
+        <span class="ico">🧠</span>
+        <span class="body"><span class="name">思考过程思维导图</span><span class="desc">可行性评估与方案决策</span></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="item" href="https://github.com/An714-design/Elderly-friendly-barrier-free-modification/blob/main/codearts_proof/%E6%8E%92%E9%94%99%E8%BF%87%E7%A8%8B%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE.md">
+        <span class="ico">🔧</span>
+        <span class="body"><span class="name">排错过程思维导图</span><span class="desc">4 个工程问题的根因与修复</span></span>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head">
+      <span class="num">2</span>
+      <h2>作品说明与源码</h2>
+      <span class="hint">对应「交付规范性 · 5 分」</span>
+    </div>
+    <div class="grid">
+      <a class="item" href="https://github.com/An714-design/Elderly-friendly-barrier-free-modification/blob/main/readme/%E4%BD%9C%E5%93%81%E8%AF%B4%E6%98%8E.md">
+        <span class="ico">📋</span>
+        <span class="body"><span class="name">作品说明</span><span class="desc">环境依赖 · 部署步骤 · 开源组件 · 码道总结</span></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="item" href="https://github.com/An714-design/Elderly-friendly-barrier-free-modification/blob/main/readme/%E5%85%A8%E9%83%A8%E5%AF%B9%E8%AF%9D.md">
+        <span class="ico">🗂️</span>
+        <span class="body"><span class="name">全部对话</span><span class="desc">开发全过程对话留档</span></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="item" href="https://github.com/An714-design/Elderly-friendly-barrier-free-modification/tree/main/project">
+        <span class="ico">📦</span>
+        <span class="body"><span class="name">完整源码</span><span class="desc">10 个 JS 模块 + HTML + CSS，纯前端零依赖</span></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="item" href="https://github.com/An714-design/Elderly-friendly-barrier-free-modification/tree/main/project/js">
+        <span class="ico">🧩</span>
+        <span class="body"><span class="name">核心模块</span><span class="desc">规则引擎 / 指标计算 / 改造详情 / 导出</span></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="item wide" href="https://github.com/An714-design/Elderly-friendly-barrier-free-modification/tree/main/ppt">
+        <span class="ico">📊</span>
+        <span class="body"><span class="name">交付 PPT（33 页）</span><span class="desc">含使用证明 · 功能架构 · 核心亮点 · 码道应用 · 源码解析 · 演示视频页</span></span>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head">
+      <span class="num">3</span>
+      <h2>说明</h2>
+    </div>
+    <div class="note ok">
+      <b>文档已托管同步。</b>点击上方任一材料，会打开 GitHub 的渲染视图——Markdown 的表格、标题、代码块都能正常显示。
+    </div>
+    <div class="note" style="margin-top:12px">
+      <b>关于源文件的说明：</b>仓库中同时保留了原始交付包（<code>readme/</code>、<code>codearts_proof/</code>、<code>project/</code>、<code>ppt/</code>）的目录结构，与提交的压缩包保持一致，便于对照核对。<br>
+      <b>演示视频</b>位于仓库 <code>video/demo.mp4</code>，通过首页播放器在线观看（已针对网页播放压缩至 1.4 MB）。
+    </div>
+  </div>
+
+  <div class="foot">
+    华为云码道 (CodeArts) 代码智能体辅助生成 · An 队 · v1.0<br>
+    技术标准：WCAG 2.1 / WCAG 2.2 / GB/T 37668-2019 / YD/T 1761
+  </div>
+
+</div>
+</body>
+</html>
