@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/33334189/README.md)
 <div align="center">
 
 # ♿ 适老化无障碍界面改造工具
@@ -159,7 +158,15 @@ Serving on http://localhost:8888
 
 ### 5. 观看演示
 
-访问 **http://localhost:8888/demo.html** 观看 8 步自动播放演示（约 22 秒）
+**在线演示视频（推荐）：** https://an714-design.github.io/Elderly-friendly-barrier-free-modification/
+
+直接点开即可在线播放，无需下载、无需本地环境。  【演示视频】 https://an714-design.github.io/Elderly-friendly-barrier-free-modification/
+
+**完整交付材料库：** https://an714-design.github.io/Elderly-friendly-barrier-free-modification/docs/
+
+### 本地自播演示
+
+访问 **http://localhost:8888/demo.html** 观看 8 步自动播放演示
 
 ---
 
