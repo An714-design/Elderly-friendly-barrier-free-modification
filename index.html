@@ -32,6 +32,11 @@
     padding:16px; margin-bottom:22px; box-shadow:0 20px 50px rgba(0,0,0,.4);
   }
   video{ width:100%; border-radius:8px; display:block; background:#000; }
+  .video-hint{
+    display:none; margin-top:10px; font-size:12.5px; color:var(--muted); text-align:center;
+  }
+  .video-hint.show{ display:block; }
+  .video-hint a{ color:#93c5fd; }
 
   .meta{
     display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:22px;
@@ -90,15 +95,19 @@
   </div>
 
   <div class="player">
-    <video controls playsinline preload="metadata" poster="">
-      <source src="video/demo.mp4" type="video/mp4">
+    <video id="demoVideo" controls playsinline preload="auto" width="900" height="536"
+           src="video/demo.mp4" type="video/mp4">
       你的浏览器不支持 HTML5 视频播放，请
       <a href="video/demo.mp4" style="color:#93c5fd">点此下载视频</a>。
     </video>
+    <div id="videoHint" class="video-hint">
+      若播放器无响应，请直接
+      <a href="video/demo.mp4" download>下载视频文件</a> 本地播放。
+    </div>
   </div>
 
   <div class="meta">
-    <div class="cell"><div class="k">时长</div><div class="v">01:36</div></div>
+    <div class="cell"><div class="k">时长</div><div class="v" id="durBadge">01:35</div></div>
     <div class="cell"><div class="k">分辨率</div><div class="v">900 × 536</div></div>
     <div class="cell"><div class="k">文件大小</div><div class="v">1.4 MB</div></div>
     <div class="cell"><div class="k">编码</div><div class="v">H.264 / AAC</div></div>
@@ -129,5 +138,36 @@
   </div>
 
 </div>
+
+<script>
+  (function () {
+    var v = document.getElementById('demoVideo');
+    var hint = document.getElementById('videoHint');
+    if (!v) return;
+
+    // Show a clear fallback hint only when the video really cannot load.
+    function showHint() { if (hint) hint.classList.add('show'); }
+
+    v.addEventListener('loadedmetadata', function () {
+      if (hint) hint.classList.remove('show');
+    });
+    v.addEventListener('error', showHint);
+
+    // Keep the on-page duration badge in sync with the real file.
+    v.addEventListener('loadedmetadata', function () {
+      var badge = document.getElementById('durBadge');
+      if (badge && isFinite(v.duration)) {
+        var m = Math.floor(v.duration / 60);
+        var s = Math.floor(v.duration % 60);
+        badge.textContent = (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+      }
+    });
+
+    // If nothing loaded within 12s, surface the download fallback.
+    setTimeout(function () {
+      if (v.readyState < 2) showHint();
+    }, 12000);
+  })();
+</script>
 </body>
 </html>
