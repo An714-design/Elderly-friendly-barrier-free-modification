@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>适老化无障碍改造 - 平台跑通演示</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei","PingFang SC",sans-serif;background:#1a1a2e;color:#fff;overflow:hidden}
+#demo{width:100vw;height:100vh;position:relative;display:flex;flex-direction:column}
+
+/* 步骤指示器 */
+.steps-bar{height:50px;background:#16213e;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 20px}
+.step-dot{width:32px;height:32px;border-radius:50%;background:#334155;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#64748b;transition:all .3s}
+.step-dot.active{background:#3b82f6;color:#fff;transform:scale(1.15)}
+.step-dot.done{background:#22c55e;color:#fff}
+.step-arrow{color:#475569;font-size:12px}
+.step-label{position:absolute;top:55px;left:50%;transform:translateX(-50%);font-size:16px;color:#93c5fd;font-weight:600;white-space:nowrap}
+
+/* 主舞台 */
+.stage{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+
+/* 模拟选课系统界面 */
+.mock-campus{width:900px;background:#f5f7fa;border-radius:8px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);position:relative}
+.mock-header{background:#2196f3;color:#fff;padding:20px 32px;font-size:22px;font-weight:700}
+.mock-notice{padding:12px 32px;color:#666;font-size:14px;background:#fff}
+.mock-tabs{display:flex;padding:0 32px;border-bottom:2px solid #e8e8e8}
+.mock-tab{padding:12px 32px;font-size:15px;cursor:pointer}
+.mock-tab.active{background:#2196f3;color:#fff;border-radius:4px 4px 0 0}
+.mock-tab.inactive{color:#bbb;background:transparent}
+.mock-table{width:100%;border-collapse:collapse;margin:16px 0}
+.mock-table th{background:#f5f7fa;color:#bbb;padding:16px 32px;text-align:left;font-size:14px;font-weight:600}
+.mock-table td{padding:16px 32px;color:#333;font-size:14px;border-bottom:1px solid #f0f4f8}
+.mock-table tr:nth-child(even) td{background:#f0f4f8}
+.mock-status-dot{display:inline-block;width:8px;height:8px;border-radius:50%}
+.mock-btn{display:inline-block;padding:12px 48px;background:#b0b8c4;color:#fff;border:none;border-radius:4px;font-size:16px;margin:24px 32px}
+
+/* 标注框动画 */
+.annotate-box{position:absolute;border:3px solid #dc2626;border-radius:2px;opacity:0;transition:opacity .4s}
+.annotate-box.show{opacity:1}
+.annotate-box.soft{border-style:dashed;border-color:#f59e0b}
+.annotate-label{position:absolute;top:-22px;left:0;background:#dc2626;color:#fff;padding:2px 8px;font-size:13px;font-weight:700;border-radius:3px;white-space:nowrap}
+.annotate-box.soft .annotate-label{background:#f59e0b}
+
+/* 检测结果面板 */
+.result-panel{position:absolute;right:20px;top:20px;width:380px;max-height:calc(100% - 40px);background:#fff;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.3);overflow-y:auto;transform:translateX(420px);transition:transform .5s;color:#1f2937}
+.result-panel.show{transform:translateX(0)}
+.result-panel h3{padding:16px;border-bottom:1px solid #e5e7eb;font-size:16px}
+.issue-card{padding:14px 16px;border-bottom:1px solid #f3f4f6;cursor:pointer}
+.issue-card:hover{background:#eff6ff}
+.issue-card.highlight{background:#eff6ff;border-left:3px solid #3b82f6}
+.issue-card-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.issue-id{font-weight:700;font-size:13px;color:#6b7280}
+.issue-cat{font-weight:600;font-size:14px}
+.issue-badge{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.issue-badge.hard{background:#fee2e2;color:#dc2626}
+.issue-badge.soft{background:#fef3c7;color:#92400e}
+.issue-sev{padding:2px 8px;border-radius:10px;font-size:11px}
+.issue-sev.high{background:#fee2e2;color:#dc2626}
+.issue-sev.medium{background:#fef3c7;color:#92400e}
+.issue-desc{font-size:13px;color:#6b7280}
+.issue-std{font-size:12px;color:#9ca3af;margin-top:4px}
+
+/* 改造详情卡片 */
+.fix-panel{position:absolute;bottom:20px;left:50%;transform:translateX(-50%) translateY(120%);width:600px;background:#fff;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.3);padding:20px;transition:transform .5s;color:#1f2937}
+.fix-panel.show{transform:translateX(-50%) translateY(0)}
+.fix-panel h4{font-size:16px;margin-bottom:12px}
+.fix-compare{display:flex;gap:32px;align-items:center;justify-content:center}
+.fix-side{text-align:center}
+.fix-side h5{font-size:13px;margin-bottom:8px;color:#6b7280}
+.fix-block{display:inline-block;width:140px;height:70px;border-radius:6px;border:1px solid #e5e7eb;line-height:70px;font-size:16px;font-weight:700}
+.fix-ratio{margin-top:8px;font-size:14px;font-weight:600}
+.fix-ratio.pass{color:#16a34a}
+.fix-ratio.fail{color:#dc2626}
+.fix-arrow{font-size:28px;color:#9ca3af}
+
+/* 设置面板 */
+.setup-panel{background:#fff;border-radius:12px;padding:40px;width:500px;color:#1f2937;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.setup-panel h2{font-size:24px;margin-bottom:24px;text-align:center}
+.setup-row{margin-bottom:16px}
+.setup-row label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.setup-row select{width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:6px;font-size:14px}
+.setup-row .val{padding:10px 12px;background:#f0f4f8;border-radius:6px;font-size:14px}
+
+/* 上传区域 */
+.upload-zone{width:500px;height:300px;border:3px dashed #64748b;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#94a3b8}
+.upload-zone.active{border-color:#3b82f6;background:rgba(59,130,246,.05)}
+.upload-icon{font-size:48px}
+.upload-text{font-size:18px}
+
+/* 隐私勾选 */
+.privacy{margin-top:16px;display:flex;align-items:center;gap:8px;font-size:14px;color:#cbd5e1}
+.privacy input{width:18px;height:18px}
+
+/* 底部进度 */
+.progress-bar{height:4px;background:#334155;position:relative}
+.progress-fill{height:100%;background:#3b82f6;width:0%;transition:width .3s}
+
+/* 控制按钮 */
+.controls{position:absolute;bottom:20px;right:20px;display:flex;gap:8px;z-index:100}
+.controls button{padding:8px 20px;border:none;border-radius:6px;font-size:14px;cursor:pointer;background:#3b82f6;color:#fff}
+.controls button:hover{background:#2563eb}
+.controls button.replay{background:#22c55e}
+
+/* Badcase列表 */
+.badcase-list{position:absolute;left:20px;top:20px;width:280px;background:#fff;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.3);overflow:hidden;color:#1f2937;transform:translateX(-300px);transition:transform .5s}
+.badcase-list.show{transform:translateX(0)}
+.badcase-list h3{padding:16px;border-bottom:1px solid #e5e7eb;font-size:15px}
+.bc-item{padding:12px 16px;border-bottom:1px solid #f3f4f6;font-size:13px;cursor:pointer}
+.bc-item:hover{background:#eff6ff}
+.bc-item.active{background:#dbeafe;border-left:3px solid #3b82f6}
+.bc-item .bc-name{font-weight:600;margin-bottom:4px}
+.bc-item .bc-issues{color:#6b7280;font-size:12px}
+
+/* 动画辅助 */
+.fade-in{animation:fadeIn .5s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.pulse{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.typing{overflow:hidden;white-space:nowrap;animation:typing 1s steps(20)}
+</style>
+</head>
+<body>
+<div id="demo">
+  <div class="steps-bar" id="stepsBar"></div>
+  <div class="step-label" id="stepLabel"></div>
+  <div class="stage" id="stage"></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="controls">
+    <button class="replay" onclick="startDemo()">重新播放</button>
+  </div>
+</div>
+
+<script>
+var steps = [
+  {num:1, label:"打开工具，配置参数"},
+  {num:2, label:"上传校园系统截图"},
+  {num:3, label:"勾选隐私确认"},
+  {num:4, label:"手动画框标注区域"},
+  {num:5, label:"双引擎分析：规则引擎 + AI"},
+  {num:6, label:"查看标注图 + 问题清单"},
+  {num:7, label:"查看改造详情（色块对比）"},
+  {num:8, label:"导出验收报告"},
+];
+
+var badcases = [
+  {name:"教务选课系统", issues:"表头对比度1.3:1 / Tab文字2.85:1", fg:"#bbbbbb", bg:"#f5f7fa", ratio:"1.32:1"},
+  {name:"食堂点餐App", issues:"商品描述1.87:1 / 价格2.5:1", fg:"#bdbdbd", bg:"#ffffff", ratio:"1.87:1"},
+  {name:"社团活动报名", issues:"描述文字1.87:1 / 时间2.85:1", fg:"#bdbdbd", bg:"#ffffff", ratio:"1.87:1"},
+  {name:"宿舍报修表单", issues:"占位符1.37:1 / 标签4.43:1", fg:"#d1d5db", bg:"#ffffff", ratio:"1.37:1"},
+  {name:"课程作业平台", issues:"描述文字2.85:1 / 进度条不足", fg:"#9e9e9e", bg:"#f8f9fa", ratio:"2.85:1"},
+  {name:"校园二手交易", issues:"聊天按钮1.37:1 / 触控24px不足", fg:"#d1d5db", bg:"#ffffff", ratio:"1.37:1"},
+  {name:"图书馆座位预约", issues:"提示文字2.85:1 / 色盲不友好", fg:"#9ca3af", bg:"#ffffff", ratio:"2.85:1"},
+  {name:"校园卡App", issues:"交易时间2.85:1 / Tab未激活2.85:1", fg:"#9ca3af", bg:"#ffffff", ratio:"2.85:1"},
+  {name:"图书馆馆藏查询", issues:"作者文字2.85:1 / 占位符不足", fg:"#9ca3af", bg:"#ffffff", ratio:"2.85:1"},
+  {name:"校园地图App", issues:"未激活Tab1.87:1 / 标记色盲不友好", fg:"#bdbdbd", bg:"#ffffff", ratio:"1.87:1"},
+  {name:"老旧教务系统", issues:"导航文字3.5:1 / 必填提示仅用红色", fg:"#666666", bg:"#e8e8e8", ratio:"3.48:1"},
+];
+
+var issues = [
+  {id:"I01", cat:"对比度-正文", level:"hard", sev:"高", desc:"表头文字对比度 1.32:1，低于 AA 要求 4.5:1", std:"WCAG 2.1 SC 1.4.3 (AA: 4.5:1)", fg:"#bbbbbb", bg:"#f5f7fa", ratio:"1.32", newFg:"#333333", newRatio:"12.63"},
+  {id:"I02", cat:"对比度-正文", level:"hard", sev:"高", desc:"未激活Tab文字对比度 2.85:1，低于 AA 要求 4.5:1", std:"WCAG 2.1 SC 1.4.3 (AA: 4.5:1)", fg:"#999999", bg:"#ffffff", ratio:"2.85", newFg:"#333333", newRatio:"12.63"},
+  {id:"I03", cat:"触摸目标尺寸(AA)", level:"hard", sev:"中", desc:"触摸目标尺寸 20×20 CSS px，低于 AA 要求 24×24", std:"WCAG 2.2 SC 2.5.8 (AA)", fg:"", bg:"", ratio:"", isSize:true},
+  {id:"I04", cat:"对比度-正文", level:"soft", sev:"中", desc:"副标题对比度 5.37:1，AA通过但建议提升至7:1", std:"WCAG 2.1 SC 1.4.3 (AAA: 7:1)", fg:"#666666", bg:"#f6f8fa", ratio:"5.37", newFg:"#333333", newRatio:"9.01"},
+];
+
+function renderStepsBar(current) {
+  var bar = document.getElementById("stepsBar");
+  bar.innerHTML = "";
+  for (var i = 0; i < steps.length; i++) {
+    var dot = document.createElement("div");
+    dot.className = "step-dot";
+    if (i + 1 < current) dot.classList.add("done");
+    if (i + 1 === current) dot.classList.add("active");
+    dot.textContent = i + 1;
+    bar.appendChild(dot);
+    if (i < steps.length - 1) {
+      var arrow = document.createElement("span");
+      arrow.className = "step-arrow";
+      arrow.textContent = "→";
+      bar.appendChild(arrow);
+    }
+  }
+  document.getElementById("stepLabel").textContent = current <= steps.length ? steps[current - 1].label : "";
+  document.getElementById("progressFill").style.width = (current / steps.length * 100) + "%";
+}
+
+function sleep(ms) { return new Promise(function(r){setTimeout(r,ms)}); }
+
+async function startDemo() {
+  var stage = document.getElementById("stage");
+  for (var i = 1; i <= steps.length; i++) {
+    renderStepsBar(i);
+    await runStep(i, stage);
+    await sleep(800);
+  }
+  renderStepsBar(steps.length + 1);
+  document.getElementById("stepLabel").textContent = "演示完成！共检测 4 个问题，3 个硬性项 + 1 个提示项";
+}
+
+async function runStep(step, stage) {
+  switch(step) {
+    case 1: await step1Setup(stage); break;
+    case 2: await step2Upload(stage); break;
+    case 3: await step3Privacy(stage); break;
+    case 4: await step4Annotate(stage); break;
+    case 5: await step5Analyze(stage); break;
+    case 6: await step6Results(stage); break;
+    case 7: await step7Fix(stage); break;
+    case 8: await step8Export(stage); break;
+  }
+}
+
+async function step1Setup(stage) {
+  stage.innerHTML = '<div class="setup-panel fade-in">' +
+    '<h2>适老化 / 无障碍界面改造</h2>' +
+    '<div class="setup-row"><label>检测模式</label><div class="val">模式A：纯截图（设计师）</div></div>' +
+    '<div class="setup-row"><label>标准档位</label><div class="val">WCAG AA</div></div>' +
+    '<div class="setup-row"><label>设备像素比 (DPR)</label><div class="val">2x</div></div>' +
+    '<div style="margin-top:24px;text-align:center"><div style="display:inline-block;padding:12px 48px;background:#3b82f6;color:#fff;border-radius:6px;font-size:16px" class="pulse">开始</div></div>' +
+    '</div>';
+  await sleep(2000);
+}
+
+async function step2Upload(stage) {
+  stage.innerHTML = '<div class="fade-in" style="display:flex;flex-direction:column;align-items:center;gap:20px">' +
+    '<div class="upload-zone active">' +
+      '<div class="upload-icon">📸</div>' +
+      '<div class="upload-text">拖拽图片到此处 或 粘贴截图</div>' +
+      '<div style="font-size:13px;color:#64748b">支持 PNG / JPG</div>' +
+    '</div></div>';
+  await sleep(1500);
+  stage.innerHTML = "";
+  await renderMockCampus(stage);
+  await sleep(1000);
+}
+
+async function renderMockCampus(stage) {
+  var div = document.createElement("div");
+  div.className = "mock-campus fade-in";
+  div.id = "mockCampus";
+  div.innerHTML =
+    '<div class="mock-header">2026春季学期网上选课</div>' +
+    '<div class="mock-notice">请于10月20日前完成选课</div>' +
+    '<div class="mock-tabs">' +
+      '<div class="mock-tab active">专业课</div>' +
+      '<div class="mock-tab inactive">公共课</div>' +
+      '<div class="mock-tab inactive">体育课</div>' +
+    '</div>' +
+    '<table class="mock-table">' +
+      '<thead><tr><th>课程名称</th><th>授课教师</th><th>学分</th><th>状态</th></tr></thead>' +
+      '<tbody>' +
+        '<tr><td>高等数学（上）</td><td>张伟</td><td>4.0</td><td><span class="mock-status-dot" style="background:#4caf50"></span></td></tr>' +
+        '<tr><td>大学英语（I）</td><td>李娜</td><td>3.0</td><td><span class="mock-status-dot" style="background:#4caf50"></span></td></tr>' +
+        '<tr><td>计算机基础</td><td>王磊</td><td>2.5</td><td><span class="mock-status-dot" style="background:#f44336"></span></td></tr>' +
+        '<tr><td>思想道德与法治</td><td>陈芳</td><td>2.0</td><td><span class="mock-status-dot" style="background:#4caf50"></span></td></tr>' +
+      '</tbody>' +
+    '</table>' +
+    '<div style="text-align:center"><button class="mock-btn">确认选课</button></div>';
+  stage.appendChild(div);
+}
+
+async function step3Privacy(stage) {
+  var privacy = document.createElement("div");
+  privacy.className = "fade-in";
+  privacy.style.cssText = "position:absolute;bottom:40px;left:50%;transform:translateX(-50%);background:#fff;color:#1f2937;padding:16px 24px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.2)";
+  privacy.innerHTML = '✅ 已确认截图中无敏感个人信息（学号/姓名/身份证等）';
+  stage.appendChild(privacy);
+  await sleep(1500);
+  privacy.remove();
+}
+
+async function step4Annotate(stage) {
+  var mock = document.getElementById("mockCampus");
+  if (!mock) return;
+  var rect = mock.getBoundingClientRect();
+  var stageRect = stage.getBoundingClientRect();
+  var offsetX = rect.left - stageRect.left;
+  var offsetY = rect.top - stageRect.top;
+
+  var boxes = [
+    {x: offsetX + 32, y: offsetY + 140, w: 120, h: 28, label:"R01 文字", soft:false},
+    {x: offsetX + 120, y: offsetY + 108, w: 80, h: 28, label:"R02 文字", soft:false},
+    {x: offsetX + 120, y: offsetY + 108, w: 80, h: 28, label:"R03 控件", soft:false, isControl:true},
+    {x: offsetX + 32, y: offsetY + 80, w: 200, h: 20, label:"R04 文字", soft:true},
+  ];
+
+  for (var i = 0; i < boxes.length; i++) {
+    var b = boxes[i];
+    var box = document.createElement("div");
+    box.className = "annotate-box";
+    if (b.soft) box.classList.add("soft");
+    box.style.left = b.x + "px";
+    box.style.top = b.y + "px";
+    box.style.width = b.w + "px";
+    box.style.height = b.h + "px";
+    box.innerHTML = '<div class="annotate-label">' + b.label + '</div>';
+    stage.appendChild(box);
+    await sleep(50);
+    box.classList.add("show");
+    await sleep(600);
+  }
+  await sleep(500);
+}
+
+async function step5Analyze(stage) {
+  var loading = document.createElement("div");
+  loading.className = "fade-in";
+  loading.style.cssText = "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.8);color:#fff;padding:24px 40px;border-radius:12px;font-size:18px;z-index:50";
+  loading.innerHTML = '<div style="display:flex;align-items:center;gap:12px"><div class="pulse" style="width:20px;height:20px;background:#3b82f6;border-radius:50%"></div> 双引擎分析中：规则引擎 + AI 语义判断...</div>';
+  stage.appendChild(loading);
+  await sleep(2500);
+  loading.remove();
+}
+
+async function step6Results(stage) {
+  var panel = document.createElement("div");
+  panel.className = "result-panel";
+  panel.id = "resultPanel";
+  var html = '<h3>问题清单（4条）</h3>';
+  for (var i = 0; i < issues.length; i++) {
+    var iss = issues[i];
+    html += '<div class="issue-card" onclick="showFix(' + i + ')">' +
+      '<div class="issue-card-head">' +
+        '<span class="issue-id">' + iss.id + '</span>' +
+        '<span class="issue-cat">' + iss.cat + '</span>' +
+        '<span class="issue-badge ' + iss.level + '">' + (iss.level === "hard" ? "硬性" : "提示") + '</span>' +
+        '<span class="issue-sev ' + iss.sev + '">' + iss.sev + '</span>' +
+      '</div>' +
+      '<div class="issue-desc">' + iss.desc + '</div>' +
+      '<div class="issue-std">标准：' + iss.std + '</div>' +
+    '</div>';
+  }
+  panel.innerHTML = html;
+  stage.appendChild(panel);
+  await sleep(100);
+  panel.classList.add("show");
+  await sleep(1000);
+
+  var bcList = document.createElement("div");
+  bcList.className = "badcase-list";
+  bcList.id = "bcList";
+  var bcHtml = '<h3>Badcase 覆盖（11个系统）</h3>';
+  for (var j = 0; j < badcases.length; j++) {
+    var bc = badcases[j];
+    bcHtml += '<div class="bc-item' + (j === 0 ? " active" : "") + '">' +
+      '<div class="bc-name">' + bc.name + '</div>' +
+      '<div class="bc-issues">' + bc.issues + '</div>' +
+    '</div>';
+  }
+  bcList.innerHTML = bcHtml;
+  stage.appendChild(bcList);
+  await sleep(100);
+  bcList.classList.add("show");
+  await sleep(1000);
+}
+
+function showFix(idx) {
+  var iss = issues[idx];
+  var stage = document.getElementById("stage");
+  var existing = document.getElementById("fixPanel");
+  if (existing) existing.remove();
+
+  var panel = document.createElement("div");
+  panel.className = "fix-panel";
+  panel.id = "fixPanel";
+
+  if (iss.isSize) {
+    panel.innerHTML = '<h4>' + iss.id + ' 改造详情：触摸目标尺寸</h4>' +
+      '<div class="fix-compare">' +
+        '<div class="fix-side"><h5>改造前</h5>' +
+          '<div style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:#e5e7eb;border:1px solid #6b7280;border-radius:4px;font-size:12px;color:#333">Tab</div>' +
+          '<div class="fix-ratio fail">20×20 ❌</div></div>' +
+        '<div class="fix-arrow">→</div>' +
+        '<div class="fix-side"><h5>改造后</h5>' +
+          '<div style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:#dbeafe;border:1px solid #3b82f6;border-radius:4px;font-size:14px;color:#333">Tab</div>' +
+          '<div class="fix-ratio pass">24×24 ✅</div></div>' +
+      '</div>';
+  } else {
+    panel.innerHTML = '<h4>' + iss.id + ' 改造详情：对比度-正文</h4>' +
+      '<div class="fix-compare">' +
+        '<div class="fix-side"><h5>改造前</h5>' +
+          '<div class="fix-block" style="background:' + iss.bg + ';color:' + iss.fg + ';">Aa 文字</div>' +
+          '<div class="fix-ratio fail">对比度 ' + iss.ratio + ':1 ❌</div></div>' +
+        '<div class="fix-arrow">→</div>' +
+        '<div class="fix-side"><h5>改造后</h5>' +
+          '<div class="fix-block" style="background:' + iss.bg + ';color:' + iss.newFg + ';">Aa 文字</div>' +
+          '<div class="fix-ratio pass">对比度 ' + iss.newRatio + ':1 ✅</div></div>' +
+      '</div>';
+  }
+  stage.appendChild(panel);
+  setTimeout(function() { panel.classList.add("show"); }, 50);
+}
+
+async function step7Fix(stage) {
+  showFix(0);
+  await sleep(2500);
+  var cards = document.querySelectorAll(".issue-card");
+  if (cards[1]) {
+    cards.forEach(function(c){c.classList.remove("highlight")});
+    cards[1].classList.add("highlight");
+    showFix(1);
+  }
+  await sleep(2500);
+}
+
+async function step8Export(stage) {
+  var fixP = document.getElementById("fixPanel");
+  if (fixP) fixP.classList.remove("show");
+
+  var exportDiv = document.createElement("div");
+  exportDiv.className = "fade-in";
+  exportDiv.style.cssText = "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;color:#1f2937;padding:32px 48px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);text-align:center;z-index:60";
+  exportDiv.innerHTML =
+    '<h2 style="margin-bottom:16px">✅ 验收报告已生成</h2>' +
+    '<div style="display:flex;gap:16px;justify-content:center;margin-bottom:16px">' +
+      '<div style="text-align:center"><div style="font-size:36px;font-weight:700;color:#dc2626">3</div><div style="font-size:13px;color:#6b7280">硬性项</div></div>' +
+      '<div style="text-align:center"><div style="font-size:36px;font-weight:700;color:#f59e0b">1</div><div style="font-size:13px;color:#6b7280">提示项</div></div>' +
+      '<div style="text-align:center"><div style="font-size:36px;font-weight:700;color:#16a34a">11</div><div style="font-size:13px;color:#6b7280">Badcase覆盖</div></div>' +
+    '</div>' +
+    '<div style="display:flex;gap:12px;justify-content:center">' +
+      '<div style="padding:10px 24px;background:#3b82f6;color:#fff;border-radius:6px">📄 导出 PNG</div>' +
+      '<div style="padding:10px 24px;background:#22c55e;color:#fff;border-radius:6px">📑 导出 PDF</div>' +
+    '</div>' +
+    '<div style="margin-top:16px;font-size:12px;color:#9ca3af">本报告为辅助自检，非第三方合规验收</div>';
+  stage.appendChild(exportDiv);
+  await sleep(3000);
+}
+
+startDemo();
+</script>
+</body>
+</html>
