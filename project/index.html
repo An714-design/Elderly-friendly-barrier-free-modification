@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>适老化/无障碍界面改造方案</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <section id="step-setup" class="step active">
+      <h1>适老化 / 无障碍界面改造</h1>
+      <div class="setup-grid">
+        <div class="setup-item">
+          <label>检测模式</label>
+          <select id="mode-select">
+            <option value="A" selected>模式A：纯截图（设计师）</option>
+            <option value="B">模式B：截图+DOM片段（研发）</option>
+          </select>
+        </div>
+        <div class="setup-item">
+          <label>标准档位</label>
+          <select id="level-select">
+            <option value="AA" selected>WCAG AA</option>
+            <option value="AAA">WCAG AAA</option>
+          </select>
+        </div>
+        <div class="setup-item">
+          <label>设备像素比 (DPR)</label>
+          <select id="dpr-select">
+            <option value="1">1x</option>
+            <option value="2" selected>2x</option>
+            <option value="3">3x</option>
+          </select>
+        </div>
+      </div>
+      <div id="dom-input-wrap" class="setup-item hidden">
+        <label>粘贴 DOM 片段（HTML）</label>
+        <textarea id="dom-input" rows="6" placeholder="粘贴页面元素的 outerHTML..."></textarea>
+      </div>
+      <button id="btn-start" class="btn-primary">开始</button>
+    </section>
+
+    <section id="step-upload" class="step">
+      <h2>上传界面截图</h2>
+      <div id="drop-zone" class="drop-zone">
+        <p>拖拽图片到此处 或 <span class="link">点击选择文件</span> 或 Ctrl+V 粘贴</p>
+        <input type="file" id="file-input" accept="image/*" hidden>
+      </div>
+      <div class="privacy-confirm">
+        <label>
+          <input type="checkbox" id="privacy-check">
+          已确认截图中无敏感个人信息（学号/姓名/身份证等）
+        </label>
+      </div>
+      <div class="step-nav">
+        <button id="btn-back-setup" class="btn-secondary">返回</button>
+        <button id="btn-next-regions" class="btn-primary" disabled>下一步：标注区域</button>
+      </div>
+    </section>
+
+    <section id="step-regions" class="step">
+      <h2>标注检测区域</h2>
+      <p class="hint">在截图上拖拽画框，选择区域类型。每个区域将独立检测。</p>
+      <div class="region-toolbar">
+        <label>当前区域类型：</label>
+        <select id="region-type-select">
+          <option value="text">文字</option>
+          <option value="control">控件（按钮/链接）</option>
+          <option value="icon">图标</option>
+          <option value="background">背景</option>
+        </select>
+        <button id="btn-undo-region" class="btn-secondary">删除最后一个框</button>
+        <button id="btn-clear-regions" class="btn-secondary">清空所有框</button>
+      </div>
+      <div class="canvas-container">
+        <canvas id="canvas-main"></canvas>
+        <canvas id="canvas-overlay"></canvas>
+      </div>
+      <div id="region-list" class="region-list"></div>
+      <div class="step-nav">
+        <button id="btn-back-upload" class="btn-secondary">返回</button>
+        <button id="btn-next-analyze" class="btn-primary" disabled>开始检测</button>
+      </div>
+    </section>
+
+    <section id="step-results" class="step">
+      <h2>检测结果</h2>
+      <div id="result-banner" class="result-banner"></div>
+      <div class="result-layout">
+        <div class="result-left">
+          <h3>标注图</h3>
+          <div class="canvas-container">
+            <canvas id="canvas-annotated"></canvas>
+          </div>
+          <div class="export-buttons">
+            <button id="btn-export-png" class="btn-primary">导出 PNG</button>
+            <button id="btn-export-pdf-img" class="btn-primary">导出 PDF（图片式）</button>
+            <button id="btn-print-pdf" class="btn-primary">打印 / 另存为 PDF</button>
+          </div>
+        </div>
+        <div class="result-right">
+          <h3>问题清单</h3>
+          <div id="issue-list" class="issue-list"></div>
+        </div>
+      </div>
+      <div id="fix-detail" class="fix-detail hidden"></div>
+      <div class="step-nav">
+        <button id="btn-back-regions" class="btn-secondary">返回重新标注</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="report-template" class="report-template hidden"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/canvas.js"></script>
+  <script src="js/metrics.js"></script>
+  <script src="js/rules.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/merge.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/fix.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
